@@ -321,6 +321,12 @@ add_subdirectory(json_spirit)
 
 include_directories("${CMAKE_SOURCE_DIR}/src/xxHash")
 
+set(GMOCK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/gmock/include")
+set(GTEST_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/gmock/gtest/include")
+
+include_directories("${CMAKE_SOURCE_DIR}/src/dmclock/src")
+include_directories("${CMAKE_SOURCE_DIR}/src/dmclock/support/src")
+
 set(xio_common_srcs)
 if(HAVE_XIO)
   list(APPEND xio_common_srcs
@@ -945,7 +951,7 @@ add_library(osd STATIC ${osd_srcs}
   $<TARGET_OBJECTS:global_common_objs>
   $<TARGET_OBJECTS:heap_profiler_objs>
   $<TARGET_OBJECTS:common_util_obj>)
-target_link_libraries(osd dl leveldb ${ALLOC_LIBS})
+target_link_libraries(osd dl leveldb dmclock ${ALLOC_LIBS})
 if(WITH_LTTNG)
   add_dependencies(osd osd-tp)
 endif()
@@ -1010,9 +1016,6 @@ add_executable(ceph-mds ${ceph_mds_srcs}
 target_link_libraries(ceph-mds mds ${CMAKE_DL_LIBS} global
   ${Boost_THREAD_LIBRARY})
 install(TARGETS ceph-mds DESTINATION bin)
-
-set(GMOCK_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/gmock/include")
-set(GTEST_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/src/gmock/gtest/include")
 
 add_subdirectory(erasure-code)
 
